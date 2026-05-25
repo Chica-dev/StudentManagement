@@ -1,4 +1,4 @@
-package reisetech.Student.Management;
+package reisetech.student.management;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;

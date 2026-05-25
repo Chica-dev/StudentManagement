@@ -1,4 +1,4 @@
-package reisetech.Student.Management;
+package reisetech.student.management;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

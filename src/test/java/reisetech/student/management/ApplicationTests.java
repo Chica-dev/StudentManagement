@@ -1,4 +1,4 @@
-package reisetech.Student.Management;
+package reisetech.student.management;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
