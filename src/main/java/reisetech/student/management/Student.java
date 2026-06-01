@@ -15,7 +15,7 @@ public class Student {
   private String nickname;
   private String email;
   private String city;
-  private int age;
+  private Integer age;
   private String gender;
 
   //private StudentCoursse course;
