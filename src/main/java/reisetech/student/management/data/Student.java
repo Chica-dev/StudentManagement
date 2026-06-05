@@ -1,4 +1,4 @@
-package reisetech.student.management;
+package reisetech.student.management.data;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
