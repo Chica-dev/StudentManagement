@@ -1,41 +1,87 @@
 package reisetech.student.management.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import reisetech.student.management.controller.converter.StudentConverter;
 import reisetech.student.management.data.Student;
 import reisetech.student.management.data.StudentsCourses;
+import reisetech.student.management.domain.StudentDetail;
 import reisetech.student.management.service.StudentService;
 
 @RestController
 public class StudentController {
 
   private final StudentService service;
+  private final StudentConverter converter;
 
   @Autowired
-  public StudentController(StudentService service) {
+  public StudentController(StudentService service, StudentConverter converter) {
     this.service = service;
+    this.converter = converter;
   }
 
   @GetMapping("/studentList")
-  public List<Student> getStudentList() {
-    return service.searchStudentList();
-  }
-
-  @GetMapping("/studentListByAge")
-  public List<Student> getStudentListByAge() {
-
-    return service.searchStudentListByAge(30, 39);
+  public List<StudentDetail> getStudentList() {
+    List<Student> students = service.searchStudentList();
+    List<StudentsCourses> studentsCourses = service.searchStudentsCourseList();
+    return converter.convertStudentDetails(students, studentsCourses);
   }
 
   @GetMapping("/studentsCourseList")
-  public List<StudentsCourses> getStudentsCourseList() {
-    return service.searchStudentsCourseList();
+  public String getStudentsCourseList(Model model) {
+    List<StudentsCourses> studentsCourses = service.searchStudentsCourseList();
+    List<Student> students = service.searchStudentList();
+    model.addAttribute("studentsCourseList", converter.convertStudentDetails(
+        students, studentsCourses));
+    return "studentsCourseList";
   }
 
-  @GetMapping("/studentsCourseListByCourse")
-  public List<StudentsCourses> getStudentsCourseListByCourse() {
-    return service.searchStudentsCourseListByCourse();
+  @GetMapping("/newStudent")
+  public String newStudent(Model model) {
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudentsCourses(List.of(new StudentsCourses()));
+    model.addAttribute("studentDetail", studentDetail);
+    return "registerStudent";
+  }
+
+  @PostMapping("registerStudent")
+  public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
+    if (result.hasErrors()){
+      return "registerStudent";
+    }
+    service.registerStudent(studentDetail);
+    return "redirect:/studentList";
+  }
+
+  @GetMapping("/updateStudent/{id}")
+  public String updateStudent(@PathVariable int id, Model model){
+    StudentDetail studentDetail = service.searchStudent(id);
+
+    List<StudentsCourses> courses = new ArrayList<>(studentDetail.getStudentsCourses());
+    courses.add(new StudentsCourses());
+    courses.add(new StudentsCourses());
+    studentDetail.setStudentsCourses(courses);
+
+    model.addAttribute("studentDetail", studentDetail);
+    return "updateStudent";
+  }
+
+  @PostMapping("/updateStudent")
+  public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
+    service.updateStudent(studentDetail);
+    return ResponseEntity.ok("更新処理が成功しました。");
   }
 }
