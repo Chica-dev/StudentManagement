@@ -8,17 +8,31 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import reisetech.student.management.data.Student;
 
+/**
+ * 受講生テーブルと紐づくRepositoryです。
+ */
 @Mapper
 public interface StudentRepository {
 
+  /**
+   * 受講生の全件検索を行います。
+   *
+   * @return 受講生一覧(全件)
+   */
   @Select("SELECT * FROM students")
   List<Student> search();
 
+  /**
+   * 受講生の検索を行います。
+   *
+   * @param id　受講生ID
+   * @return 受講生
+   */
   @Select("SELECT * FROM students WHERE id = #{id}")
   Student searchStudent(int id);
 
-  @Insert("INSERT INTO students (full_name, furigana, nickname, email, city, age, gender,remark)" +
-      "VALUES(#{fullName}, #{furigana}, #{nickname}, #{email}, #{city}, #{age}, #{gender}, #{remark})")
+  @Insert("INSERT INTO students (full_name, furigana, nickname, email, city, age, gender,remark,is_deleted)" +
+      "VALUES(#{fullName}, #{furigana}, #{nickname}, #{email}, #{city}, #{age}, #{gender}, #{remark}, false)")
 
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void insertStudent(Student student);

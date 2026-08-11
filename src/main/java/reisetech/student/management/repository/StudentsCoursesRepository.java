@@ -8,12 +8,26 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import reisetech.student.management.data.StudentsCourses;
 
+/**
+ * 受講生コース情報テーブルと紐づくRepositoryです。
+ */
 @Mapper
 public interface StudentsCoursesRepository {
 
+    /**
+     * 受講生コース情報の全件検索を行います。
+     *
+     * @return 受講生のコース情報(全件)
+     */
     @Select("SELECT * FROM students_courses")
     List<StudentsCourses> searchCourses();
 
+    /**
+     * 受講生IDに紐づく受講生コース情報を検索します。
+     *
+     * @param studentId 受講生ID
+     * @return 受講生IDに紐づく受講生コース情報
+     */
     @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
     List<StudentsCourses> searchCoursesByStudentId(int studentId);
 
