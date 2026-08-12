@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import reisetech.student.management.data.Student;
-import reisetech.student.management.data.StudentsCourses;
+import reisetech.student.management.data.StudentCourse;
 
 @Getter
 @Setter
@@ -15,5 +15,5 @@ import reisetech.student.management.data.StudentsCourses;
 public class StudentDetail {
 
   private Student student;
-  private List<StudentsCourses> studentsCourses;
+  private List<StudentCourse> studentCourseList;
 }

@@ -1,7 +1,7 @@
 $kind: http-request
 name: 受講生更新
 url: http://localhost:8080/updateStudent
-method: POST
+method: PUT
 headers:
   Content-Type: application/json
   Accept: application/json,application/*+json
@@ -12,7 +12,7 @@ body:
         "student": {
             "id" : "6",
             "fullName" : "渡辺美咲",
-            "furigana" : "ミサキワタナベ",
+            "furigana" : "ワタナベミサキ",
             "nickname" : "みさ",
             "email" : "misaki.w@example.com",
             "city" : "埼玉県",
@@ -21,7 +21,7 @@ body:
             "remaek" : "",
             "isDeleted" : "true"
         },
-        "studentsCourses" : [
+        "studentCourseList" : [
             
         ]
     }

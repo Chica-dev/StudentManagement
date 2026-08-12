@@ -2,7 +2,6 @@ package reisetech.student.management.data;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @JsonPropertyOrder({"id", "studentId", "course", "startDate", "expectedEndDate"})
   @Getter
   @Setter
-public class StudentsCourses {
+public class StudentCourse {
 
   private Integer id;
   private Integer studentId;

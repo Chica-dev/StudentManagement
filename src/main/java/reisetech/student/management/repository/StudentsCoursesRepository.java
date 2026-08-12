@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import reisetech.student.management.data.StudentsCourses;
+import reisetech.student.management.data.StudentCourse;
 
 /**
  * 受講生コース情報テーブルと紐づくRepositoryです。
@@ -20,7 +20,7 @@ public interface StudentsCoursesRepository {
      * @return 受講生のコース情報(全件)
      */
     @Select("SELECT * FROM students_courses")
-    List<StudentsCourses> searchCourses();
+    List<StudentCourse> searchCourse();
 
     /**
      * 受講生IDに紐づく受講生コース情報を検索します。
@@ -29,14 +29,25 @@ public interface StudentsCoursesRepository {
      * @return 受講生IDに紐づく受講生コース情報
      */
     @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
-    List<StudentsCourses> searchCoursesByStudentId(int studentId);
+    List<StudentCourse> searchCourseByStudentId(int studentId);
 
+    /**
+     * 受講生コース情報を新規登録します。
+     * IDに関しては自動採番を行う。
+     *
+     * @param studentCourse 受講生コース情報
+     */
     @Insert("INSERT INTO students_courses(student_id, course, start_date, expected_end_date)" +
         "VALUES (#{studentId}, #{course}, #{startDate}, #{expectedEndDate})")
     @Options (useGeneratedKeys = true, keyProperty = "id")
-    void insertStudentsCourses(StudentsCourses studentsCourses);
+    void registerStudentCourse(StudentCourse studentCourse);
 
+    /**
+     * 受講生コース情報のコース名を更新します。
+     *
+     * @param studentCourse 受講生コース情報
+     */
     @Update("UPDATE students_courses SET course = #{course}, start_date = #{startDate}, "
         + "expected_end_date = #{expectedEndDate} WHERE id = #{id}")
-    void updateStudentsCourses(StudentsCourses studentsCourses);
+    void updateStudentCourse(StudentCourse studentCourse);
 }
