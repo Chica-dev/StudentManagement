@@ -19,7 +19,6 @@ public interface StudentsCoursesRepository {
      *
      * @return 受講生のコース情報(全件)
      */
-    @Select("SELECT * FROM students_courses")
     List<StudentCourse> searchCourse();
 
     /**
@@ -28,7 +27,6 @@ public interface StudentsCoursesRepository {
      * @param studentId 受講生ID
      * @return 受講生IDに紐づく受講生コース情報
      */
-    @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
     List<StudentCourse> searchCourseByStudentId(int studentId);
 
     /**
@@ -37,9 +35,6 @@ public interface StudentsCoursesRepository {
      *
      * @param studentCourse 受講生コース情報
      */
-    @Insert("INSERT INTO students_courses(student_id, course, start_date, expected_end_date)" +
-        "VALUES (#{studentId}, #{course}, #{startDate}, #{expectedEndDate})")
-    @Options (useGeneratedKeys = true, keyProperty = "id")
     void registerStudentCourse(StudentCourse studentCourse);
 
     /**
@@ -47,7 +42,5 @@ public interface StudentsCoursesRepository {
      *
      * @param studentCourse 受講生コース情報
      */
-    @Update("UPDATE students_courses SET course = #{course}, start_date = #{startDate}, "
-        + "expected_end_date = #{expectedEndDate} WHERE id = #{id}")
     void updateStudentCourse(StudentCourse studentCourse);
 }

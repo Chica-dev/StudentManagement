@@ -3,6 +3,7 @@ package reisetech.student.management.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,7 +67,7 @@ public class StudentController {
    * @return 実行結果
    */
   @PostMapping("registerStudent")
-  public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail) {
+  public ResponseEntity<StudentDetail> registerStudent(@Validated @RequestBody StudentDetail studentDetail) {
     StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
     return ResponseEntity.ok(responseStudentDetail);
   }
@@ -90,7 +91,7 @@ public class StudentController {
    * @return 実行結果
    */
   @PutMapping("/updateStudent")
-  public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
+  public ResponseEntity<String> updateStudent(@Validated @RequestBody StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
     return ResponseEntity.ok("更新処理が成功しました。");
   }

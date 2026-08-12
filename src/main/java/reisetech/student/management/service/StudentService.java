@@ -9,6 +9,8 @@ import reisetech.student.management.controller.converter.StudentConverter;
 import reisetech.student.management.data.Student;
 import reisetech.student.management.data.StudentCourse;
 import reisetech.student.management.domain.StudentDetail;
+import reisetech.student.management.exception.InvalidCourseDateRangeException;
+import reisetech.student.management.exception.StudentNotFoundException;
 import reisetech.student.management.repository.StudentRepository;
 import reisetech.student.management.repository.StudentsCoursesRepository;
 
@@ -52,6 +54,9 @@ public class StudentService {
    */
   public StudentDetail searchStudent(int id) {
     Student student = repository.searchStudent(id);
+    if (student == null) {
+      throw  new StudentNotFoundException("指定されたID(" + id + ")の受講生が見つかりません。");
+    }
     List<StudentCourse> studentCourse = studentsCoursesRepository.searchCourseByStudentId(id);
     return new StudentDetail(student, studentCourse);
   }
@@ -105,10 +110,18 @@ public class StudentService {
   @Transactional
   public void updateStudent(StudentDetail studentDetail) {
     repository.updateStudent(studentDetail.getStudent());
-    studentDetail.getStudentCourseList()
-        .forEach(studentsCoursesRepository::updateStudentCourse);
-  }
 
+    studentDetail.getStudentCourseList().forEach(course -> {
+      validateCourseDateRange(course);
+      studentsCoursesRepository.updateStudentCourse(course);
+    });
+  }
+  private void validateCourseDateRange(StudentCourse course) {
+    if (course.getStartDate() != null && course.getExpectedEndDate() != null
+    && course.getExpectedEndDate().isBefore(course.getStartDate())) {
+      throw new InvalidCourseDateRangeException("終了予定日は開始日より後の日付を指定してください。");
+    }
+  }
 }
 
 
