@@ -17,5 +17,4 @@ public class GlobalExceptionHandler {
   public ResponseEntity<String> handleInvalidCourseDateRange(InvalidCourseDateRangeException e) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
   }
-
 }
