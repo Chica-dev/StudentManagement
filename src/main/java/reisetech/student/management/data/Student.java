@@ -15,22 +15,22 @@ public class Student {
 
   private Integer id;
 
-  @NotBlank
+  @NotBlank(message = "氏名は必須です")
   private String fullName;
 
-  @NotBlank
+  @NotBlank(message = "フリガナは必須です")
   private String furigana;
 
   private String nickname;
 
-  @NotBlank
-  @Email
+  @NotBlank(message = "メールアドレスは必須です")
+  @Email(message = "メールアドレスの形式が正しくありません")
   private String email;
 
   private String city;
 
-  @Min(0)
-  @Max(99)
+  @Min(value = 0, message = "年齢は0以上で入力してください")
+  @Max(value = 99, message = "年齢は99以下で入力してください")
   private Integer age;
 
   private String gender;

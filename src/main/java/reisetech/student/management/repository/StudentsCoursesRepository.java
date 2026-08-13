@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import reisetech.student.management.data.StudentCourse;
@@ -27,7 +28,7 @@ public interface StudentsCoursesRepository {
      * @param studentId 受講生ID
      * @return 受講生IDに紐づく受講生コース情報
      */
-    List<StudentCourse> searchCourseByStudentId(int studentId);
+    List<StudentCourse> searchCourseByStudentId(@Param("id") int studentId);
 
     /**
      * 受講生コース情報を新規登録します。

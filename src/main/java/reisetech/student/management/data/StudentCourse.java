@@ -16,11 +16,11 @@ public class StudentCourse {
   private Integer id;
   private Integer studentId;
 
-  @NotBlank
+  @NotBlank(message = "コース名は必須です")
   private String course;
 
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  @FutureOrPresent
+  @FutureOrPresent(message = "開始日は今日以降の日付を指定してください")
   private LocalDate startDate;
 
   @DateTimeFormat(pattern =  "yyyy-MM-dd")
