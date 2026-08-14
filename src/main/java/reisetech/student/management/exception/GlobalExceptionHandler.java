@@ -1,5 +1,7 @@
 package reisetech.student.management.exception;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -31,5 +33,22 @@ public class GlobalExceptionHandler {
             (existing, replacement) -> existing
         ));
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<Map<String, String>> handleConstraintViolation(ConstraintViolationException e) {
+    Map<String, String> errors = e.getConstraintViolations().stream()
+        .collect(Collectors.toMap(
+            v -> v.getPropertyPath().toString(),
+            ConstraintViolation::getMessage,
+            (existing, replacement) -> existing
+        ));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<String> handleUnexpectedException(Exception e) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body("予期しないエラーが発生しました。");
   }
 }
