@@ -1,0 +1,5 @@
+$kind: http-request
+name: 受講生検索
+url: http://localhost:8080/student/6
+method: GET
+order: 557925112832214

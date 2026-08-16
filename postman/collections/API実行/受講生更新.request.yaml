@@ -1,0 +1,28 @@
+$kind: http-request
+name: 受講生更新
+url: http://localhost:8080/updateStudent
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json,application/*+json
+body:
+  type: json
+  content: |-
+    {
+        "student": {
+            "id" : "6",
+            "fullName" : "渡辺美咲",
+            "furigana" : "ワタナベミサキ",
+            "nickname" : "みさ",
+            "email" : "misaki.w@example.com",
+            "city" : "埼玉県",
+            "age" : "26",
+            "gender" : "女性",
+            "remark" : "",
+            "isDeleted" : "true"
+        },
+        "studentCourseList" : [
+            
+        ]
+    }
+order: 663496469174473

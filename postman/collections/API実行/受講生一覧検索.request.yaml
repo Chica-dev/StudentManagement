@@ -1,0 +1,5 @@
+$kind: http-request
+name: 受講生一覧検索
+url: http://localhost:8080/studentList
+method: GET
+order: 1785939388070

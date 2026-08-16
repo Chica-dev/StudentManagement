@@ -1,0 +1,29 @@
+$kind: http-request
+name: 受講生登録
+url: http://localhost:8080/registerStudent
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json,application/*+json
+body:
+  type: json
+  content: |-
+    {
+        "student": {
+            "fullName" : "渡辺美由紀",
+            "furigana" : "ワタナベミユキ",
+            "nickname" : "みゆ",
+            "email" : "misaki.w@example.com",
+            "city" : "埼玉県",
+            "age" : "26",
+            "gender" : "女性",
+            "remark" : ""
+        },
+        "studentsCourses" : [
+            {
+                "course" : "AWS"
+            }
+            
+        ]
+    }
+order: 601172046989703
