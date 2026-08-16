@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reisetech.student.management.repository.StudentsCoursesRepository">
+  <!-- 受講生コース情報の全件検索 -->
+  <select id="searchCourse" resultType="reisetech.student.management.data.StudentCourse">
+    SELECT *
+    FROM students_courses
+  </select>
+
+  <!-- 受講生コース情報の検索 -->
+  <select id="searchCourseByStudentId" resultType="reisetech.student.management.data.StudentCourse">
+    SELECT *
+    FROM students_courses
+    WHERE student_id = #{studentId}
+  </select>
+
+  <!-- 受講生コース情報の登録 -->
+  <insert id="registerStudentCourse" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO students_courses(student_id, course, start_date, expected_end_date)
+    VALUES (#{studentId}, #{course}, #{startDate}, #{expectedEndDate})
+  </insert>
+
+  <!-- 受講生コース情報の更新 -->
+  <update id="updateStudentCourse">
+    UPDATE students_courses SET
+    course = #{course},
+    start_date = #{startDate},
+    expected_end_date = #{expectedEndDate}
+    WHERE id = #{id}
+  </update>
+</mapper>
