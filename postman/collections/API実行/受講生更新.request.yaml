@@ -18,7 +18,7 @@ body:
             "city" : "埼玉県",
             "age" : "26",
             "gender" : "女性",
-            "remaek" : "",
+            "remark" : "",
             "isDeleted" : "true"
         },
         "studentCourseList" : [
