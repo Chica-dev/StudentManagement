@@ -2,13 +2,9 @@ package reisetech.student.management.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-//import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,14 +42,23 @@ class StudentServiceTest {
   void 受講生詳細の一覧検索_リポジトリとコンバーターの処理が適切に呼び出せていること() {
     List<Student> studentList = new ArrayList<>();
     List<StudentCourse> studentCourseList =new ArrayList<>();
+
+    Student student = new Student();
+    student.setId(1);
+    StudentDetail studentDetail = new StudentDetail(student, new ArrayList<>());
+    List<StudentDetail> expected = new ArrayList<>();
+    expected.add(studentDetail);
+
     when(repository.search()).thenReturn(studentList);
     when(studentsCoursesRepository.searchCourse()).thenReturn(studentCourseList);
+    when(converter.convertStudentDetails(studentList, studentCourseList)).thenReturn(expected);
 
     List<StudentDetail> actual = sut.searchStudentList();
 
     verify(repository, times(1)).search();
     verify(studentsCoursesRepository, times(1)).searchCourse();
     verify(converter, times(1)).convertStudentDetails(studentList, studentCourseList);
+    assertEquals(expected, actual);
   }
 
   @Test
@@ -104,7 +109,11 @@ class StudentServiceTest {
     student.setId(1);
 
     StudentCourse course1 = new StudentCourse();
+    course1.setId(1);
+
     StudentCourse course2 = new StudentCourse();
+    course2.setId(2);
+
     List<StudentCourse> studentCourseList = new  ArrayList<>();
     studentCourseList.add(course1);
     studentCourseList.add(course2);
@@ -158,7 +167,7 @@ class StudentServiceTest {
         () -> sut.updateStudent(studentDetail));
 
     assertEquals("終了予定日は開始日より後の日付を指定してください。", exception.getMessage());
-    verify(repository, times(1)).updateStudent(student);
+    verify(repository, times(0)).updateStudent(student);
     verify(studentsCoursesRepository, times(0)).updateStudentCourse(course);
   }
 }
