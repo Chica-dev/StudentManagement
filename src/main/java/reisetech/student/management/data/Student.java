@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import lombok.Setter;
 @JsonPropertyOrder({"id", "fullName", "furigana", "nickname", "email", "city", "age", "gender"})
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Student {
 
   private Integer id;

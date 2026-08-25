@@ -109,13 +109,13 @@ public class StudentService {
    */
   @Transactional
   public void updateStudent(StudentDetail studentDetail) {
-    repository.updateStudent(studentDetail.getStudent());
 
-    studentDetail.getStudentCourseList().forEach(course -> {
-      validateCourseDateRange(course);
-      studentsCoursesRepository.updateStudentCourse(course);
-    });
+    studentDetail.getStudentCourseList().forEach(this::validateCourseDateRange);
+
+    repository.updateStudent(studentDetail.getStudent());
+    studentDetail.getStudentCourseList().forEach(studentsCoursesRepository::updateStudentCourse);
   }
+
   private void validateCourseDateRange(StudentCourse course) {
     if (course.getStartDate() != null && course.getExpectedEndDate() != null
     && course.getExpectedEndDate().isBefore(course.getStartDate())) {
