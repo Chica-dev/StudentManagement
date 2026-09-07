@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/test:MODE=MySQL
+    username: sa
+    password: sa
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
