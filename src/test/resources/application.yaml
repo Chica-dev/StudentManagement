@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Student.Management
+  sql:
+    init:
+      mode: always
+  datasource:
+    driver-class-name: org.h2.Driver
+  profiles:
+    active: dev
+  h2:
+    console:
+      enabled: true
+
+# MyBatisの設定
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/*.xml
