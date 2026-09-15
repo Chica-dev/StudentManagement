@@ -5,8 +5,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reisetech.student.management.data.ApplicationStatus;
+import reisetech.student.management.exception.ApplicationStatusNotFoundException;
 import reisetech.student.management.exception.InvalidStatusTransitionException;
+import reisetech.student.management.exception.StudentCourseNotFoundException;
 import reisetech.student.management.repository.ApplicationStatusRepository;
+import reisetech.student.management.repository.StudentsCoursesRepository;
 
 /**
  * 申込状況を取り扱うサービスです。 申込状況の検索・登録・更新を行います。
@@ -34,14 +37,17 @@ public class ApplicationStatusService {
   );
 
   private final ApplicationStatusRepository repository;
+  private final StudentsCoursesRepository studentsCoursesRepository;
 
   @Autowired
-  public ApplicationStatusService(ApplicationStatusRepository repository) {
+  public ApplicationStatusService(ApplicationStatusRepository repository,
+      StudentsCoursesRepository studentsCoursesRepository) {
     this.repository = repository;
+    this.studentsCoursesRepository = studentsCoursesRepository;
   }
 
   /**
-   * 申込状況の一覧検索です。 全件詮索を行うので、条件指定は行いません。
+   * 申込状況の一覧検索です。 全件検索を行うので、条件指定は行いません。
    *
    * @return 申込状況一覧(全件)
    */
@@ -56,7 +62,12 @@ public class ApplicationStatusService {
    * @return 申込状況
    */
   public ApplicationStatus searchApplicationStatus(int studentsCoursesId) {
-    return repository.searchByStudentsCoursesId(studentsCoursesId);
+    ApplicationStatus applicationStatus = repository.searchByStudentsCoursesId(studentsCoursesId);
+    if (applicationStatus == null) {
+      throw  new ApplicationStatusNotFoundException(
+          "指定された受講生コース情報ID(" + studentsCoursesId + ")の申込状況が見つかりません。");
+    }
+    return applicationStatus;
   }
 
   /**
@@ -66,6 +77,10 @@ public class ApplicationStatusService {
    * @return 登録した申込状況
    */
   public ApplicationStatus registerApplicationStatus(int studentsCoursesId) {
+    if (studentsCoursesRepository.searchCourseById(studentsCoursesId) == null) {
+      throw new StudentCourseNotFoundException(
+          "指定された受講生コース情報ID(" + studentsCoursesId + ")が見つかりません。");
+    }
     ApplicationStatus applicationStatus = new ApplicationStatus();
     applicationStatus.setStudentsCoursesId(studentsCoursesId);
     applicationStatus.setStatus(STATUS_PROVISIONAL);
@@ -79,8 +94,7 @@ public class ApplicationStatusService {
    * @param applicationStatus 更新後の申込状況
    */
   public void updateApplicationStatus(ApplicationStatus applicationStatus) {
-    ApplicationStatus current = repository.searchByStudentsCoursesId(
-        applicationStatus.getStudentsCoursesId());
+    ApplicationStatus current = searchApplicationStatus(applicationStatus.getStudentsCoursesId());
     validateStatusTransition(current.getStatus(), applicationStatus.getStatus());
     repository.updateApplicationStatus(applicationStatus);
   }

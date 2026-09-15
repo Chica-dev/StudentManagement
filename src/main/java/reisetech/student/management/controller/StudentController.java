@@ -51,10 +51,10 @@ public class StudentController {
    * @param city 地域(部分一致)
    * @param course コース名(部分一致)
    * @param status 申込状況
-   * @return 受講性詳細一覧
+   * @return 受講生詳細一覧
    */
   @Operation(summary = "一覧検索", description = "受講生の一覧を検索します。"
-      + "全件検索を指定しない場合は全件検索、指定した場合はその条件に合致する受講性を検索します。")
+      + "検索条件を指定しない場合は全件検索、指定した場合はその条件に合致する受講生を検索します。")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "受講生詳細一覧(全件)の取得に成功",
           content = @Content(schema = @Schema(implementation = StudentDetail.class)))
@@ -161,13 +161,13 @@ public class StudentController {
   }
 
   /**
-   * 受講生詳細の更新を行います。 キャンセルフラグの更新もここで行います(論理削除)
+   * 受講生詳細の更新を行います。 削除フラグの更新もここで行います(論理削除)
    *
    * @param studentDetail 受講生詳細
    * @return 実行結果
    */
   @Operation(summary = "受講生更新", description = "受講生詳細の更新を行います。"
-      + "キャンセルフラグ(論理削除)の更新もここで行います。")
+      + "削除フラグ(論理削除)の更新もここで行います。")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "更新処理が成功",
           content = @Content(schema = @Schema(implementation = String.class))),

@@ -33,8 +33,18 @@ public class StudentSearchCondition {
    * @return すべて未設定の場合はtrue
    */
   public boolean isEmpty() {
-    return fullName == null && furigana == null && nickname == null
-        && minAge == null && maxAge == null && gender == null
-        && city == null && course == null && status == null;
+    return isBlank(fullName) && isBlank(furigana) && isBlank(nickname)
+        && minAge == null && maxAge == null && isBlank(gender)
+        && isBlank(city) && isBlank(course) && isBlank(status);
+  }
+
+  /**
+   * 文字列がnullまたは空白のみかどうかを判定します。
+   *
+   * @param value 判定対象の文字列
+   * @return nullまたは空白のみの場合はtrue
+   */
+  private boolean isBlank(String value) {
+    return value == null || value.trim().isEmpty();
   }
 }

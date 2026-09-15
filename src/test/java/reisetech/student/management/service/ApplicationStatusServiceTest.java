@@ -13,8 +13,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import reisetech.student.management.data.ApplicationStatus;
+import reisetech.student.management.data.StudentCourse;
+import reisetech.student.management.exception.ApplicationStatusNotFoundException;
 import reisetech.student.management.exception.InvalidStatusTransitionException;
+import reisetech.student.management.exception.StudentCourseNotFoundException;
 import reisetech.student.management.repository.ApplicationStatusRepository;
+import reisetech.student.management.repository.StudentsCoursesRepository;
 
 class ApplicationStatusServiceTest {
 
@@ -23,10 +27,13 @@ class ApplicationStatusServiceTest {
   @Mock
   private ApplicationStatusRepository repository;
 
+  @Mock
+  private StudentsCoursesRepository studentsCoursesRepository;
+
   @BeforeEach
   void before() {
     MockitoAnnotations.openMocks(this);
-    sut = new ApplicationStatusService(repository);
+    sut = new ApplicationStatusService(repository, studentsCoursesRepository);
   }
 
   private ApplicationStatus createApplicationStatus(int studentsCoursesId, String staus) {
@@ -45,17 +52,40 @@ class ApplicationStatusServiceTest {
 
   @Test
   void 受講生コース情報IDに紐づく申込状況の検索_リポジトリの処理が適切に呼び出せていること() {
+    ApplicationStatus applicationStatus = createApplicationStatus(1, "仮申込");
+    when(repository.searchByStudentsCoursesId(1)).thenReturn(applicationStatus);
+
     sut.searchApplicationStatus(1);
 
     verify(repository, times(1)).searchByStudentsCoursesId(1);
   }
 
   @Test
+  void 受講生コース情報IDに紐づく申込状況の検索_存在しない場合は例外がスローされること() {
+    when(repository.searchByStudentsCoursesId(999)).thenReturn(null);
+
+    assertThatThrownBy(() -> sut.searchApplicationStatus(999))
+        .isInstanceOf(ApplicationStatusNotFoundException.class)
+        .hasMessage("指定された受講生コース情報ID(999)の申込状況が見つかりません。");
+  }
+
+  @Test
   void 申込状況の新規登録_状態は必ず仮申込で登録されること() {
+    when(studentsCoursesRepository.searchCourseById(1)).thenReturn(new StudentCourse());
+
     ApplicationStatus actual = sut.registerApplicationStatus(1);
 
     assertThat(actual.getStatus()).isEqualTo("仮申込");
     verify(repository, times(1)).registerApplicationStatus(actual);
+  }
+
+  @Test
+  void 申込状況の新規登録_存在しない受講生コース情報IDの場合は例外がスローされること() {
+    when(studentsCoursesRepository.searchCourseById(999)).thenReturn(null);
+
+    assertThatThrownBy(() -> sut.registerApplicationStatus(999))
+        .isInstanceOf(StudentCourseNotFoundException.class)
+        .hasMessage("指定された受講生コース情報ID(999)が見つかりません。");
   }
 
   @ParameterizedTest

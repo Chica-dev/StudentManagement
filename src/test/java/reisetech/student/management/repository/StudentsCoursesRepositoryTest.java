@@ -68,4 +68,19 @@ class StudentsCoursesRepositoryTest {
 
     assertThat(updated.getCourse()).isEqualTo("AI開発");
   }
+
+  @Test
+  void 受講生コース情報IDに紐づく受講生コース情報の検索が行えること() {
+    StudentCourse actual = sut.searchCourseById(1);
+
+    assertThat(actual.getId()).isEqualTo(1);
+    assertThat(actual.getCourse()).isEqualTo("Java応用");
+  }
+
+  @Test
+  void 存在しない受講生コース情報IDを指定した場合はnullが返ってくること() {
+    StudentCourse actual = sut.searchCourseById(999);
+
+    assertThat(actual).isNull();
+  }
 }

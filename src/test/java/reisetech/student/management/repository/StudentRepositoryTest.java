@@ -164,4 +164,15 @@ assertThat(actual.size()).isEqualTo(8);
 
     assertThat(actual.size()).isEqualTo(8);
   }
+
+  @Test
+  void 検索条件_空文字が指定された場合は条件なし扱いになること() {
+    StudentSearchCondition condition = new StudentSearchCondition();
+    condition.setFullName("");
+    condition.setCity("   ");
+
+    List<Student> actual = sut.searchByCondition(condition);
+
+    assertThat(actual.size()).isEqualTo(8);
+  }
 }

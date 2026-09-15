@@ -17,13 +17,13 @@
     LEFT JOIN students_courses sc ON s.id = sc.student_id
     LEFT JOIN application_statuses aps ON sc.id = aps.students_courses_id
     <where>
-      <if test="fullName != null">
+      <if test="fullName != null and fullName.trim() != ''">
         AND s.full_name LIKE CONCAT('%', #{fullName}, '%')
       </if>
-      <if test="furigana != null">
+      <if test="furigana != null and furigana.trim() !=''">
         AND s.furigana LIKE CONCAT('%', #{furigana}, '%')
       </if>
-      <if test="nickname != null">
+      <if test="nickname != null and nickname.trim() !=''">
         AND s.nickname LIKE CONCAT('%', #{nickname}, '%')
       </if>
       <if test="minAge != null">
@@ -32,16 +32,16 @@
       <if test="maxAge != null">
         AND s.age &lt;= #{maxAge}
       </if>
-      <if test="gender != null">
+      <if test="gender != null and gender.trim() !=''">
         AND s.gender = #{gender}
       </if>
-      <if test="city != null">
+      <if test="city != null and city.trim() !=''">
         AND s.city LIKE CONCAT('%', #{city}, '%')
       </if>
-      <if test="course != null">
+      <if test="course != null and course.trim() !=''">
         AND sc.course LIKE CONCAT('%', #{course}, '%')
       </if>
-      <if test="status != null">
+      <if test="status != null and status.trim() !=''">
         AND aps.status = #{status}
       </if>
     </where>

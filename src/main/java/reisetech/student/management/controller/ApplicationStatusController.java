@@ -42,7 +42,7 @@ public class ApplicationStatusController {
    * @return 申込状況一覧(全件)
    */
   @Operation(summary = "一覧検索", description = "申込状況の一覧を検索します。"
-      + "全件検索を行うので条件指定はおこにません。")
+      + "全件検索を行うので条件指定は行いません。")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "申込状況一覧(全件)の取得に成功",
           content = @Content(schema = @Schema(implementation = ApplicationStatus.class)))
