@@ -21,6 +21,14 @@ CREATE TABLE IF NOT EXISTS students_courses
     expected_end_date  TIMESTAMP
     );
 
+CREATE TABLE IF NOT EXISTS application_statuses
+(
+    id                   INT AUTO_INCREMENT PRIMARY KEY,
+    students_courses_id  INT NOT NULL,
+    status               VARCHAR(20) NOT NULL,
+    FOREIGN KEY (students_courses_id) REFERENCES students_courses(id)
+    );
+
 -- シーケンスを既存の最大IDより後ろに調整(次のINSERTでID重複しないように)
 -- ALTER TABLE students ALTER COLUMN id RESTART WITH 14;
 -- ALTER TABLE students_courses ALTER COLUMN id RESTART WITH 17;

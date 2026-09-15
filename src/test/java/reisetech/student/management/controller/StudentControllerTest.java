@@ -1,8 +1,6 @@
 package reisetech.student.management.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
@@ -13,15 +11,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -30,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import reisetech.student.management.data.Student;
 import reisetech.student.management.data.StudentCourse;
 import reisetech.student.management.domain.StudentDetail;
+import reisetech.student.management.domain.StudentSearchCondition;
 import reisetech.student.management.exception.StudentNotFoundException;
 import reisetech.student.management.service.StudentService;
 import tools.jackson.databind.json.JsonMapper;
@@ -93,6 +91,47 @@ class StudentControllerTest {
         .andExpect(jsonPath("$[0].studentCourseList[0].course").value("Javaコース"));
 
     verify(service, times(1)).searchStudentList();
+  }
+
+  @Test
+  void 受講生詳細の一覧検索で検索条件が指定された場合は条件検索が呼ばれること() throws Exception {
+    List<StudentDetail> emptyList = List.of();
+    when(service.searchStudentList(any(StudentSearchCondition.class))).thenReturn(emptyList);
+
+    mockMvc.perform(get("/studentList").param("fullName", "田中"))
+        .andExpect(status().isOk())
+        .andExpect(content().json("[]"));
+
+    verify(service, times(1)).searchStudentList(any(StudentSearchCondition.class));
+    verify(service, times(0)).searchStudentList();
+  }
+
+  @Test
+  void 受講生詳細の一覧検索で複数の検索条件を組み合わせて指定できること() throws Exception {
+    ArgumentCaptor<StudentSearchCondition> captor =
+        ArgumentCaptor.forClass(StudentSearchCondition.class);
+    when(service.searchStudentList(any(StudentSearchCondition.class))).thenReturn(List.of());
+
+    mockMvc.perform(get("/studentList")
+        .param("course", "Java")
+        .param("status", "受講中"))
+        .andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentList(captor.capture());
+    StudentSearchCondition captured = captor.getValue();
+    assertThat(captured.getCourse()).isEqualTo("Java");
+    assertThat(captured.getStatus()).isEqualTo("受講中");
+  }
+
+  @Test
+  void 受講生詳細の一覧検索で検索条件が指定されない場合は全件詮索が呼ばれること() throws Exception {
+    when(service.searchStudentList()).thenReturn(List.of());
+
+    mockMvc.perform(get("/studentList"))
+        .andExpect(status().isOk());
+
+    verify(service, times(1)).searchStudentList();
+    verify(service, times(0)).searchStudentList(any(StudentSearchCondition.class));
   }
 
   @Test
@@ -261,11 +300,11 @@ class StudentControllerTest {
     Student student = createValidStudent();
     student.setId(1);
     student.setFullName("");
-    StudentDetail requesDetail = new StudentDetail(student, List.of(createValidStudentCourse()));
+    StudentDetail requestDetail = new StudentDetail(student, List.of(createValidStudentCourse()));
 
     mockMvc.perform(put("/updateStudent")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonMapper.writeValueAsString(requesDetail)))
+        .content(jsonMapper.writeValueAsString(requestDetail)))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$['student.fullName']").value("氏名は必須です"));
 

@@ -58,4 +58,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body("予期しないエラーが発生しました。");
   }
+
+  @ExceptionHandler(InvalidStatusTransitionException.class)
+  public ResponseEntity<String> handleInvalidStatusTransition(InvalidStatusTransitionException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
 }

@@ -9,6 +9,7 @@ import reisetech.student.management.controller.converter.StudentConverter;
 import reisetech.student.management.data.Student;
 import reisetech.student.management.data.StudentCourse;
 import reisetech.student.management.domain.StudentDetail;
+import reisetech.student.management.domain.StudentSearchCondition;
 import reisetech.student.management.exception.InvalidCourseDateRangeException;
 import reisetech.student.management.exception.StudentNotFoundException;
 import reisetech.student.management.repository.StudentRepository;
@@ -41,6 +42,23 @@ public class StudentService {
    */
   public List<StudentDetail> searchStudentList() {
     List<Student> studentList = repository.search();
+    List<StudentCourse> studentCourseList = studentsCoursesRepository.searchCourse();
+    return converter.convertStudentDetails(studentList, studentCourseList);
+  }
+
+
+  /**
+   * 検索条件に紐づく受講生詳細一覧検索です。
+   * 検索条件が指定されていない場合は、全件検索(searchStudentList())と同様の結果を返します。
+   * ヒットした受講生について、条件に合致しないコースも含めた全コース情報を設定します。
+   * @param condition 検索条件
+   * @return 検索条件に合致した受講生詳細一覧
+   */
+  public List<StudentDetail> searchStudentList(StudentSearchCondition condition) {
+    if (condition.isEmpty()) {
+      return searchStudentList();
+    }
+    List<Student> studentList = repository.searchByCondition(condition);
     List<StudentCourse> studentCourseList = studentsCoursesRepository.searchCourse();
     return converter.convertStudentDetails(studentList, studentCourseList);
   }

@@ -5,10 +5,47 @@
 <mapper namespace="reisetech.student.management.repository.StudentRepository">
 
   <!-- 受講生の全件検索 -->
-<select id="search" resultType="reisetech.student.management.data.Student">
-  SELECT *
-  FROM students
-</select>
+  <select id="search" resultType="reisetech.student.management.data.Student">
+    SELECT *
+    FROM students
+  </select>
+
+  <!-- 検索条件に紐づく受講生の検索 -->
+  <select id="searchByCondition" resultType="reisetech.student.management.data.Student">
+    SELECT DISTINCT s.*
+    FROM students s
+    LEFT JOIN students_courses sc ON s.id = sc.student_id
+    LEFT JOIN application_statuses aps ON sc.id = aps.students_courses_id
+    <where>
+      <if test="fullName != null">
+        AND s.full_name LIKE CONCAT('%', #{fullName}, '%')
+      </if>
+      <if test="furigana != null">
+        AND s.furigana LIKE CONCAT('%', #{furigana}, '%')
+      </if>
+      <if test="nickname != null">
+        AND s.nickname LIKE CONCAT('%', #{nickname}, '%')
+      </if>
+      <if test="minAge != null">
+        AND s.age &gt;= #{minAge}
+      </if>
+      <if test="maxAge != null">
+        AND s.age &lt;= #{maxAge}
+      </if>
+      <if test="gender != null">
+        AND s.gender = #{gender}
+      </if>
+      <if test="city != null">
+        AND s.city LIKE CONCAT('%', #{city}, '%')
+      </if>
+      <if test="course != null">
+        AND sc.course LIKE CONCAT('%', #{course}, '%')
+      </if>
+      <if test="status != null">
+        AND aps.status = #{status}
+      </if>
+    </where>
+  </select>
 
   <!-- 受講生の検索 -->
   <select id="searchStudent" resultType="reisetech.student.management.data.Student">
@@ -18,23 +55,24 @@
   </select>
 
   <!-- 受講生の登録 -->
-<insert id="registerStudent" useGeneratedKeys="true" keyProperty="id">
-  INSERT INTO students (full_name, furigana, nickname, email, city, age, gender,remark,is_deleted)
-  VALUES(#{fullName}, #{furigana}, #{nickname}, #{email}, #{city}, #{age}, #{gender}, #{remark}, false)
-</insert>
+  <insert id="registerStudent" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO students (full_name, furigana, nickname, email, city, age, gender,remark,is_deleted)
+    VALUES(#{fullName}, #{furigana}, #{nickname}, #{email}, #{city}, #{age}, #{gender}, #{remark},
+    false)
+  </insert>
 
   <!-- 受講生の更新 -->
   <update id="updateStudent">
-  UPDATE students SET
-  full_name = #{fullName},
-  furigana = #{furigana},
-  nickname = #{nickname},
-  email = #{email},
-  city = #{city},
-  age = #{age},
-  gender = #{gender},
-  remark = #{remark},
-  is_deleted = #{deleted}
-  WHERE id = #{id}
+    UPDATE students SET
+    full_name = #{fullName},
+    furigana = #{furigana},
+    nickname = #{nickname},
+    email = #{email},
+    city = #{city},
+    age = #{age},
+    gender = #{gender},
+    remark = #{remark},
+    is_deleted = #{deleted}
+    WHERE id = #{id}
   </update>
 </mapper>
