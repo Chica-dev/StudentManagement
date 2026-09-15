@@ -27,6 +27,14 @@ public interface StudentsCoursesRepository {
     List<StudentCourse> searchCourseByStudentId(@Param("studentId") int studentId);
 
     /**
+     * 受講生コース情報IDに紐づく受講生コース情報を検索します。
+     *
+     * @param id 受講生コース情報ID
+     * @return 受講生コース情報
+     */
+    StudentCourse searchCourseById(@Param("id") int id);
+
+    /**
      * 受講生コース情報を新規登録します。
      * IDに関しては自動採番を行う。
      *

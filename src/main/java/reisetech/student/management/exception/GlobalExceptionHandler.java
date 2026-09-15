@@ -58,4 +58,20 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body("予期しないエラーが発生しました。");
   }
+
+  @ExceptionHandler(InvalidStatusTransitionException.class)
+  public ResponseEntity<String> handleInvalidStatusTransition(InvalidStatusTransitionException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler(ApplicationStatusNotFoundException.class)
+  public ResponseEntity<String> handleApplicationStatusNotFound(
+      ApplicationStatusNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+  }
+
+  @ExceptionHandler(StudentCourseNotFoundException.class)
+  public ResponseEntity<String> handleStudentCourseNotFound(StudentCourseNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+  }
 }
