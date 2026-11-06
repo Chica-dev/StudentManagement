@@ -56,7 +56,7 @@ jobs:
           [Unit]
           Description = StudentManagement App
           
-          [service]
+          [Service]
           ExecStart = java -jar ${DEST_PATH}
           EnvironmentFile = /etc/sysconfig/StudentManagement
           Restart = no
@@ -66,7 +66,7 @@ jobs:
           SuccessExitStatus = 143
           
           [Install]
-          wantedBy = multi-user.target
+          WantedBy = multi-user.target
           EDL
           fi
           
